@@ -164,7 +164,6 @@ class NeutronWindow
 	
 	__New(html:="", css:="", js:="", title:="Neutron")
 	{
-		static wb
 		this.LISTENERS := [this.WM_DESTROY, this.WM_SIZE, this.WM_NCCALCSIZE
 		, this.WM_KEYDOWN, this.WM_LBUTTONDOWN]
 		
@@ -258,13 +257,17 @@ class NeutronWindow
 		
 		RegRead, fbe, % this.KEY_FBE, % this.EXE_NAME
 		RegWrite, REG_DWORD, % this.KEY_FBE, % this.EXE_NAME, 0
-		Gui, Add, ActiveX, vwb hWndhWB x0 y0 w800 h600, about:blank
+		Gui, Add, ActiveX, hWndhWB x0 y0 w800 h600, about:blank
 		if (fbe = "")
 			RegDelete, % this.KEY_FBE, % this.EXE_NAME
 		else
 			RegWrite, REG_DWORD, % this.KEY_FBE, % this.EXE_NAME, % fbe
 		
 		; Save the WebBrowser control to reference later
+		; instead of adding a 'v' option to the control and adding a 'Static' reference at the top of the method,
+		; we use GuiControlGet to get the handler of the control instead.
+		; Sadly we cannoot put the variable: this.wb, because AHK doesn't like it.
+		GuiControlGet, wb,, % hWB
 		this.wb := wb
 		this.hWB := hWB
 		
